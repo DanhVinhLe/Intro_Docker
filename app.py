@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Form 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 from diffusers import StableDiffusionPipeline
 import torch 
@@ -30,6 +30,6 @@ def generate_image(prompt: str = Form(...),
         buffered = io.BytesIO()
         image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-        return {"image_base64": img_str}
+        return JSONResponse(content={"image_base64": img_str})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
